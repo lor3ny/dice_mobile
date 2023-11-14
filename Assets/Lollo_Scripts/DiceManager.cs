@@ -8,11 +8,11 @@ public class DiceManager : MonoBehaviour
     private byte[] score;
     private byte heroesCount = 4;
     private DiceController[] dice;
+    private byte diceSelectedIndex;
 
     //Public:
     public GameObject dicePrefab;
     public Transform[] positions;
-
     public DiceState currentState = DiceState.Null;
 
     private void Awake()
@@ -22,12 +22,12 @@ public class DiceManager : MonoBehaviour
 
         dice = new DiceController[heroesCount];
 
-        for (int i = 0; i < heroesCount; i++)
+        for (byte i = 0; i < heroesCount; i++)
         {
             GameObject newDice = Instantiate(dicePrefab, positions[i].position, Quaternion.identity);
             newDice.transform.SetParent(this.transform);
             dice[i] = newDice.GetComponent<DiceController>();
-            dice[i].Initialize();
+            dice[i].Initialize(i);
         }
 
         currentState = DiceState.Unrolled;
@@ -48,30 +48,29 @@ public class DiceManager : MonoBehaviour
         }
 
         //UI Animation
-        UIRoll();
+        for (int i = 0; i < score.Length; i++)
+        {
+            dice[i].SetImage(score[i]);
+            dice[i].SetAvailable();
+            Debug.Log(score[i]);
+        }
 
         currentState = DiceState.Rolled;
     }
 
 
-    private void DiceSelection()
+    public void DiceSelection(byte diceID)
     {
         for(int i = 0;i < dice.Length; i++)
         {
-            //dice[i].SetSelectable();
-        }
-    }
-
-
-
-    private void UIRoll()
-    {
-        if (score.Length == 0)
-            return;
-
-        for(int i = 0;i < score.Length;i++) {
-            dice[i].SetImage(score[i]);
-            Debug.Log(score[i]);   
+            if(i == diceID)
+            {
+                dice[i].SetSelected();
+                diceSelectedIndex = diceID;
+            } else
+            {
+                dice[i].SetAvailable();
+            }
         }
     }
 
