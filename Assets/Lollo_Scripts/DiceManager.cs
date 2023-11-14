@@ -9,11 +9,11 @@ public class DiceManager : MonoBehaviour
     private byte heroesCount = 4;
     private DiceController[] dice;
     private byte diceSelectedIndex;
+    private DiceState currentState = DiceState.Null;
 
     //Public:
     public GameObject dicePrefab;
     public Transform[] positions;
-    public DiceState currentState = DiceState.Null;
 
     private void Awake()
     {
@@ -44,7 +44,7 @@ public class DiceManager : MonoBehaviour
 
         for(int i = 0; i < heroesCount; i++)
         {
-            score[i] = (byte) Random.Range(0,7);    
+            score[i] = (byte) Random.Range(1,7);    
         }
 
         //UI Animation
